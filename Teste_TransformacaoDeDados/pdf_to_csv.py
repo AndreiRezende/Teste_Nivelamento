@@ -10,6 +10,7 @@ def extrair_tabelas_pdf():
     pasta_temp = 'temp_pdfs'
     pdf_alvo = 'Anexo_1.pdf'
     arquivo_csv = 'Tabela_Anexo1.csv'
+    nome_zip = 'Teste_Andrei.zip'
     
     colunas = [
         'PROCEDIMENTO',
@@ -133,5 +134,10 @@ def extrair_tabelas_pdf():
                 escritor.writeheader()
                 escritor.writerows(dicionarios_filtrados)
 
+    with zipfile.ZipFile(nome_zip, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        zipf.write(arquivo_csv, os.path.basename(arquivo_csv))
+
+    os.remove(arquivo_csv)
+    
 if __name__ == '__main__':
     extrair_tabelas_pdf()

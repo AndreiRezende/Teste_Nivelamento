@@ -2,7 +2,6 @@ import scrapy
 import os
 import requests
 import zipfile
-
 class AnexosSpider(scrapy.Spider):
     name = "anexos_downloader"
     allowed_domains = ["www.gov.br"]
@@ -35,5 +34,5 @@ class AnexosSpider(scrapy.Spider):
         with zipfile.ZipFile(nome_zip, "w") as pasta_zip:
             for file in os.listdir(nome_pasta):
                 pasta_zip.write(os.path.join(nome_pasta, file), file)
-
+        
         self.log(f"Zip criado: {nome_zip}")
