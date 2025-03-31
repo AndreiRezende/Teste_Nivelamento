@@ -1,6 +1,7 @@
 import scrapy
 import os
 import requests
+import zipfile
 
 class AnexosSpider(scrapy.Spider):
     name = "anexos_downloader"
@@ -20,7 +21,7 @@ class AnexosSpider(scrapy.Spider):
 
     def download_pdfs(self, links_pdf):
         nome_pasta = "anexos"
-
+        nome_zip = "anexos_compactados.zip"
         os.makedirs(nome_pasta, exist_ok=True)
 
         for i, pdf_url in enumerate(links_pdf):
@@ -30,3 +31,9 @@ class AnexosSpider(scrapy.Spider):
             with open(nome_pdf, "wb") as file:
                 file.write(response.content)
             self.log(f"Baixado: {nome_pdf}")
+        
+        with zipfile.ZipFile(nome_zip, "w") as pasta_zip:
+            for file in os.listdir(nome_pasta):
+                pasta_zip.write(os.path.join(nome_pasta, file), file)
+
+        self.log(f"Zip criado: {nome_zip}")
