@@ -99,5 +99,10 @@ def extrair_tabelas_pdf():
                             texto_filtrado = texto.replace("\n", "")
                             dados_tabela[indice]['CAPÍTULO'] = texto_filtrado
 
+        dicionarios_filtrados = [
+            d for d in dados_tabela
+            if not all(valor == '' for valor in d.values())
+        ]
+
 if __name__ == '__main__':
     extrair_tabelas_pdf()
