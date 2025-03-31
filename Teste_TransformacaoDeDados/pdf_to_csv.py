@@ -2,13 +2,30 @@ import os
 import zipfile
 from pdfminer.high_level import extract_pages
 from pdfminer.layout import LTTextBoxHorizontal, LTRect
+import csv
 
 def extrair_tabelas_pdf():
     # Configurações de caminhos e nomes de arquivo
     caminho_zip = os.path.join('..', 'Teste_WebScraping', 'anexos_compactados.zip')
     pasta_temp = 'temp_pdfs'
     pdf_alvo = 'Anexo_1.pdf'
+    arquivo_csv = 'Tabela_Anexo1.csv'
     
+    colunas = [
+        'PROCEDIMENTO',
+        'RN (alteração)',
+        'VIGÊNCIA',
+        'OD',
+        'AMB',
+        'HCO',
+        'HSO',
+        'REF',
+        'PAC',
+        'DUT',
+        'SUBGRUPO',
+        'GRUPO',
+        'CAPÍTULO'
+    ]
     # Extrair PDF do ZIP
     with zipfile.ZipFile(caminho_zip, 'r') as zip_ref:
         zip_ref.extract(pdf_alvo, pasta_temp)
@@ -103,6 +120,18 @@ def extrair_tabelas_pdf():
             d for d in dados_tabela
             if not all(valor == '' for valor in d.values())
         ]
+        
+        if os.path.exists(arquivo_csv):
+            with open(arquivo_csv, mode='a', newline='', encoding='utf-8') as arquivo:
+                escritor = csv.DictWriter(arquivo, fieldnames=colunas)
+                if arquivo.tell() == 0:
+                    escritor.writeheader()
+                escritor.writerows(dicionarios_filtrados)
+        else:
+            with open(arquivo_csv, mode='w', newline='', encoding='utf-8') as arquivo:
+                escritor = csv.DictWriter(arquivo, fieldnames=colunas)
+                escritor.writeheader()
+                escritor.writerows(dicionarios_filtrados)
 
 if __name__ == '__main__':
     extrair_tabelas_pdf()
