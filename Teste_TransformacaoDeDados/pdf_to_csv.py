@@ -118,9 +118,9 @@ def extrair_tabelas_pdf():
 
         dicionarios_filtrados = [
             d for d in dados_tabela
-            if not all(valor == '' for valor in d.values())
+            if sum(1 for valor in d.values() if valor not in ('', None)) >= 2
         ]
-        
+
         if os.path.exists(arquivo_csv):
             with open(arquivo_csv, mode='a', newline='', encoding='utf-8') as arquivo:
                 escritor = csv.DictWriter(arquivo, fieldnames=colunas)
