@@ -15,4 +15,18 @@ class AnexosSpider(scrapy.Spider):
             link = item.xpath(".//a/@href").extract_first()
             links_pdfs.append(link)
 
-    
+        if links_pdfs:
+            self.download_pdfs(links_pdfs)
+
+    def download_pdfs(self, links_pdf):
+        nome_pasta = "anexos"
+
+        os.makedirs(nome_pasta, exist_ok=True)
+
+        for i, pdf_url in enumerate(links_pdf):
+            nome_pdf = os.path.join(nome_pasta, f"Anexo_{i+1}.pdf")
+            response = requests.get(pdf_url)
+
+            with open(nome_pdf, "wb") as file:
+                file.write(response.content)
+            self.log(f"Baixado: {nome_pdf}")
