@@ -3,6 +3,7 @@ import zipfile
 from pdfminer.high_level import extract_pages
 from pdfminer.layout import LTTextBoxHorizontal, LTRect
 import csv
+import pandas as pd
 
 def extrair_tabelas_pdf():
     # Configurações de caminhos e nomes de arquivo
@@ -134,10 +135,18 @@ def extrair_tabelas_pdf():
                 escritor.writeheader()
                 escritor.writerows(dicionarios_filtrados)
 
+    df = pd.read_csv(arquivo_csv)
+    df['OD'] = df['OD'].replace('OD', 'Seg. Odontológica')
+    df['AMB'] = df['AMB'].replace('AMB', 'Seg. Ambulatorial')
+    # Nao entendi perfeitamente, se era para alterar somente os valroes ou o título da coluna também
+    # Na dúvida alterei os dois
+    df = df.rename(columns={'OD': 'Seg. Odontológica', 'AMB': 'Seg. Ambulatorial'})
+    df.to_csv(arquivo_csv, index=False)
+
     with zipfile.ZipFile(nome_zip, 'w', zipfile.ZIP_DEFLATED) as zipf:
         zipf.write(arquivo_csv, os.path.basename(arquivo_csv))
 
     os.remove(arquivo_csv)
-    
+
 if __name__ == '__main__':
     extrair_tabelas_pdf()
