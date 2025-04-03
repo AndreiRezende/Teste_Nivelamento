@@ -51,3 +51,24 @@ SET valor_saldo_inicial = REPLACE(valor_saldo_inicial, ',', '.'),
 ALTER TABLE temp_demonstracoes_contabeis
 ALTER COLUMN valor_saldo_inicial TYPE DECIMAL(15, 2) USING valor_saldo_inicial::DECIMAL(15, 2),
 ALTER COLUMN valor_saldo_final TYPE DECIMAL(15, 2) USING valor_saldo_final::DECIMAL(15, 2);
+
+-- Tratando datas, valores no tipo DD/MM/YYYY fora do formato padrão para DATE
+
+INSERT INTO demonstracoes_contabeis (
+    data_demonstracao,
+    registro_ans,
+    codigo_contabil,
+    descricao,
+    valor_saldo_inicial,
+    valor_saldo_final
+)
+SELECT 
+    TO_DATE(data_demonstracao, 'DD/MM/YYYY') AS data_demonstracao,
+    registro_ans,
+    codigo_contabil,
+    descricao,
+    valor_saldo_inicial,
+    valor_saldo_final
+FROM temp_demonstracoes_contabeis;
+
+DROP TABLE temp_demonstracoes_contabeis; --Exlcuindo tabela temporária, que foi utilizada para tratar data fora do formato em um arquivo
