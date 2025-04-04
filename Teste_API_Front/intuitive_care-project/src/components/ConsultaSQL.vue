@@ -1,40 +1,47 @@
 <template>
     <div class="container">
-      <h1 class="title">Consulta SQL</h1>
-      
-      <div class="form-container">
-        <form @submit.prevent="buscarDados" class="search-form">
-          <div class="form-group">
-            <label for="descricao" class="form-label">Descrição:</label>
-            <input v-model="descricao" type="text" id="descricao" class="form-input" required />
+    <header class="app-header">
+      <img src="@/assets/logoic.jpg" alt="Intuitive Care" class="logo">
+      <h1 class="app-title">Intuitive Care</h1>
+    </header>
+      <div class="dashboard">
+        <div class="query-panel">
+          <h1>Consulta SQL<br>Maiores Despesas</h1>
+          <form @submit.prevent="buscarDados">
+            <div class="form-group">
+              <label for="descricao">Descrição da demonstração contábil:</label>
+              <input v-model="descricao" type="text" id="descricao" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="data">Data:</label>
+              <input v-model="data" type="date" id="data" required>
+            </div>
+            
+            <button type="submit">Buscar</button>
+          </form>
+        </div>
+  
+        <div class="results-panel">
+          <h1>Operadoras de Plano de Saúde Ativas</h1>
+          
+          <div v-if="submitted && dados.length === 0" class="no-results">
+            Nenhum resultado encontrado
           </div>
           
-          <div class="form-group">
-            <label for="data" class="form-label">Data:</label>
-            <input v-model="data" type="date" id="data" class="form-input" required />
-          </div>
-          
-          <button type="submit" class="search-button">Buscar</button>
-        </form>
-      </div>
-  
-      <div v-if="submitted && dados.length === 0" class="no-results">
-        Nenhum resultado encontrado para os filtros aplicados.
-      </div>
-  
-      <div v-if="dados.length > 0" class="table-container">
-        <table class="results-table">
-          <thead>
-            <tr>
-              <th v-for="(valor, chave) in dados[0]" :key="chave">{{ formatarCabecalho(chave) }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(linha, index) in dados" :key="index">
-              <td v-for="(valor, chave) in linha" :key="chave">{{ valor }}</td>
-            </tr>
-          </tbody>
-        </table>
+          <table v-if="dados.length > 0">
+            <thead>
+              <tr>
+                <th v-for="(valor, chave) in dados[0]" :key="chave">{{ formatarCabecalho(chave) }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(linha, index) in dados" :key="index">
+                <td v-for="(valor, chave) in linha" :key="chave">{{ valor }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </template>
@@ -52,145 +59,153 @@
       };
     },
     methods: {
-        async buscarDados() {
-            this.submitted = true;
-
-            try {  
-                const params = {
-                descricao: this.descricao,
-                data: this.data
-                };
-
-                const response = await axios.get('http://localhost:8000/operadora/', { params });
-
-                this.dados = response.data || [];
-                
-            } catch (error) {
-                console.error("[ERRO COMPLETO]", {
-                message: error.message,
-                config: error.config,
-                response: error.response?.data
-                });
+      async buscarDados() {
+        this.submitted = true;
+        
+        try {
+          const response = await axios.get('http://localhost:8000/operadora/', {
+            params: {
+              descricao: this.descricao,
+              data: this.data
             }
-        },
-        formatarCabecalho(chave) {
-            const cabecalhos = {
-            'razao_social': 'Razão Social',
-            'registro_ans': 'Registro ANS',
-            'descricao': 'Descrição',
-            'diferenca': 'Diferença (R$)'
-            };
-            return cabecalhos[chave] || chave;
+          });
+          this.dados = response.data || [];
+        } catch (error) {
+          console.error("Erro:", error);
         }
+      },
+      formatarCabecalho(chave) {
+        const cabecalhos = {
+          'razao_social': 'Razão Social',
+          'registro_ans': 'Registro ANS',
+          'descricao': 'Descrição',
+          'diferenca': 'Despesa (R$)'
+        };
+        return cabecalhos[chave] || chave;
+      }
     }
   };
   </script>
   
   <style>
   .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100vh;
-    padding: 1rem;
-    max-width: 800px;
+    padding: 20px;
+    max-width: 95%;
     margin: 0 auto;
-    padding-top: 2rem;
   }
   
-  .title {
-    margin-bottom: 1.5rem;
-    color: #2c3e50;
-    font-size: 2rem;
+  .dashboard {
+    display: flex;
+    gap: 20px;
+    min-height: 80vh;
   }
-  
-  .form-container {
-    width: 100%;
-    max-width: 500px;
-    background: #f8f9fa;
-    padding: 1.5rem;
+  .query-panel, .results-panel {
+    background: white;
+    padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    margin-bottom: 1.5rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   }
   
-  .search-form {
+  .query-panel {
+    flex: 1;
+    min-width: 350px;
+  }
+  
+  .results-panel {
+    flex: 2;
+    min-width: 600px;
+    overflow-y: auto;
+    max-height: 80vh;
+  }
+  
+  form {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 15px;
   }
   
   .form-group {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 5px;
   }
   
-  .form-label {
-    font-weight: 500;
-    color: #495057;
-  }
-  
-  .form-input {
-    padding: 0.6rem;
-    border: 1px solid #ced4da;
+  input {
+    padding: 8px;
+    border: 1px solid #ddd;
     border-radius: 4px;
-    font-size: 1rem;
-    transition: border-color 0.3s;
   }
   
-  .search-button {
-    padding: 0.6rem;
-    background-color: #4CAF50;
+  button {
+    padding: 10px;
+    background: #4CAF50;
     color: white;
     border: none;
     border-radius: 4px;
-    font-size: 1rem;
-    font-weight: 500;
     cursor: pointer;
-    transition: background-color 0.3s;
-    margin-top: 0.5rem;
+  }
+
+  button:hover {
+    background-color:#5dc560;
+    border: 2px solid white;
+    transform: scale(1.1);
   }
   
-  .no-results {
-    text-align: center;
-    padding: 1rem;
-    background-color: #f8d7da;
-    color: #721c24;
-    border-radius: 4px;
-    width: 100%;
-    max-width: 500px;
-    margin: 0.5rem 0;
-  }
-  
-  .table-container {
-    width: 100%;
-    overflow-x: auto;
-    margin-top: 1rem;
-  }
-  
-  .results-table {
+  table {
     width: 100%;
     border-collapse: collapse;
-    box-shadow: 0 2px 3px rgba(0,0,0,0.1);
+    margin-top: 15px;
   }
   
   th, td {
-    border: 1px solid #ddd;
-    padding: 0.75rem;
+    padding: 12px;
     text-align: left;
+    border-bottom: 1px solid #ddd;
   }
   
   th {
     background-color: #f2f2f2;
-    font-weight: bold;
   }
   
-  tr:nth-child(even) {
-    background-color: #f9f9f9;
+  .no-results {
+    padding: 20px;
+    text-align: center;
+    color: #665;
   }
-  
-  tr:hover {
-    background-color: #f1f1f1;
+  h1 {
+    font-family: "Arial", sans-serif;
+    color: rgb(31, 29, 29);
+    font-weight: 200;
+    line-height: 1.2;
+    font-size: 32px;
   }
-  </style>
+  .app-header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.logo {
+  height: 50px;
+  width: auto;
+}
+
+.app-title {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  color: rgb(171, 96, 245);
+  margin: 0;
+}
+
+.query-panel h2,
+.results-panel h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+</style>
