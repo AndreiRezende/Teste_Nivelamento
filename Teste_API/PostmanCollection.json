@@ -1,0 +1,23 @@
+{
+	"info": {
+		"_postman_id": "b2289095-33d7-44b5-9ac1-4b30cd07bac8",
+		"name": "New Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24866456"
+	},
+	"item": [
+		{
+			"name": "IntuitiveCare",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
