@@ -1,4 +1,4 @@
-CREATE DATABASE IF NOT EXISTS IntuitiveCare;
+CREATE DATABASE IntuitiveCare;
 
 USE IntuitiveCare;
 

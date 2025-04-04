@@ -53,7 +53,7 @@ python pdf_to_csv_py
 Nessa etapa é preciso baixar o postgreSQL e rodar as scripts .sql contidas na pasta Teste_BandoDeDados
 
 ### Etapa 4
-Necessitar baixar o Node.js
+É necessário baixar o Node.js e alterar a variável URL_DATABASE em database.py de acordo com suas configs do banco de dados (postgreSQL)
 
 ```
 cd Teste_API
