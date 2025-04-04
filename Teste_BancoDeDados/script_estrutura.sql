@@ -1,5 +1,9 @@
+CREATE DATABASE IF NOT EXISTS IntuitiveCare;
+
+USE IntuitiveCare;
+
 -- TABELA DE DOMÍNIO
-CREATE TABLE operadoras_ativas (
+CREATE TABLE IF NOT EXISTS operadoras_ativas (
     registro_ans INT PRIMARY KEY,
     CNPJ CHAR(14) UNIQUE NOT NULL,
     razao_social VARCHAR(140) NOT NULL,
@@ -26,7 +30,7 @@ CREATE TABLE operadoras_ativas (
 );
 
 -- Provavelmente uma Tabela de Junção
-CREATE TABLE demonstracoes_contabeis (
+CREATE TABLE  IF NOT EXISTS demonstracoes_contabeis (
     data_demonstracao DATE NOT NULL,
     registro_ans INT NOT NULL,
     codigo_contabil INT NOT NULL,
