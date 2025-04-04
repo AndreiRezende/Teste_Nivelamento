@@ -60,6 +60,7 @@ cd Teste_API
 
 pip install uvicorn
 npm install axios
+uvicorn main:app --reload
 
 cd Teste_API_front
 npm create vue@latest
