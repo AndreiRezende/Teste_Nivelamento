@@ -61,7 +61,7 @@ CREATE INDEX idx_querie_analitica ON demonstracoes_contabeis(data_demonstracao, 
 -- Tabela temporária
 CREATE TEMP TABLE temp_demonstracoes_contabeis (
     data_demonstracao VARCHAR(10),
-    registro_ans CHAR(6) NOT NULL,
+    registro_ans INT NOT NULL,
     codigo_contabil INT NOT NULL,
     descricao VARCHAR(180),
     valor_saldo_inicial VARCHAR(20),
