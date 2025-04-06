@@ -60,10 +60,13 @@ cd Teste_API
 
 pip install uvicorn
 npm install axios
+pip install fastapi
+pip install sqlalchemy
+pip install psycopg2
 uvicorn main:app --reload
 
 cd Teste_API_front
-npm create vue@latest
+cd intuitive_care-project
 npm install
 npm run dev
 ```
