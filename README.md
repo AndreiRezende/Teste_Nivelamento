@@ -55,18 +55,15 @@ Nessa etapa é preciso baixar o postgreSQL e rodar as scripts .sql contidas na p
 ### Etapa 4
 É necessário baixar o Node.js e alterar a variável URL_DATABASE em database.py de acordo com suas configs do banco de dados (postgreSQL)
 
+#### Backend - FastAPI
 ```
 cd Teste_API
-
-pip install uvicorn
-npm install axios
-pip install fastapi
-pip install sqlalchemy
-pip install psycopg2
+pip install fastapi uvicorn sqlalchemy psycopg2
 uvicorn main:app --reload
-
-cd Teste_API_front
-cd intuitive_care-project
+```
+#### Frontend - Vue.js (Em outro terminal)
+```
+cd Teste_API_front/intuitive_care-project
 npm install
 npm run dev
 ```
